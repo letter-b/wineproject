@@ -1,4 +1,7 @@
+# To jumpstart a notebook focused on insights and storytelling
+
 # from src.insights_functions import ...
+
 # from insights_functions import (
     #build_feature_importance_df,
     #plot_feature_importance,
