@@ -1,7 +1,9 @@
 input_data:
   file1: "data/raw/red.csv"
-  file2: "data/raw/varieties.csv" 
-
+  file2: "data/raw/varieties.csv"
+  file3: "data/clean/red_ml_final.csv"
+  file4: "data/clean/red_ml_final_valuescore.csv"
+  file5: "data/clean/red_ml_model_input.csv"
 
 output_data:
   
