@@ -2,24 +2,55 @@
 
 ## Project Structure
 
-```
-├── config.yaml                    # Project configuration settings
-├── README.md                      # Project documentation
-
 ├── data/
+│   ├── clean/
+│   │   ├── red_ml_final_valuescore.csv
+│   │   ├── red_ml_final.csv
+│   │   └── red_ml_model_input.csv
 │   └── raw/
-│       ├── red.csv                # Original Vivino red wine dataset
-│       ├── varieties.csv          # Reference list of grape varieties
-    └── clean/
-│       ├── red_ml_final.csv              # Cleaned dataset with engineered features
-        ├── red_ml_final_valuescore.csv   # Value score computed
-│       └── red_ml_model_input.csv        # Minimal dataset for modelling
-
+│       ├── Red.csv
+│       └── Varieties.csv
+│
+├── figures/
+│   ├── correlation matrix.png
+│   ├── Model Performance by Variable.png
+│   ├── ModelComparison.png
+│   ├── other models prediction.png
+│   ├── Pearson.png
+│   ├── Python_Best-Value-Countries.png
+│   ├── Python_PricevsRating-Log-Scale.png
+│   ├── Python_PricevsRating.png
+│   ├── Python_Top-Drivers-High-Wine-Ratings.png
+│   ├── scatterplot.png
+│   ├── Tableau-Dashboard_Market & Behavior.png
+│   ├── Tableau-Dashboard_Value Analysis.png
+│   ├── Tableau-Sheet_Best Value Wine Countries.png
+│   ├── Tableau-Sheet_Global Distribution of Red Wines.png
+│   ├── Tableau-Sheet_Price vs Rating.png
+│   ├── Tableau-Story_Exploring Price, Popularity, and Value.png
+│   └── ...
+│
 ├── notebooks/
-│   ├── data_cleaning_beatriz_update.ipynb   # Data wrangling & variety engineering
-│   ├── data_modelling_victoria.ipynb        # EDA, feature engineering & KNN model
-│   └── insights-storytelling_rachel.ipynb   # Feature importance, value analysis & storytelling
-```
+│   ├── data_cleaning_beatriz_update.ipynb
+│   ├── data_modelling_victoria.ipynb
+│   ├── data-model_exploring.ipynb
+│   └── insights-storytelling_rachel.ipynb
+│
+├── slides/
+│
+├── src/
+│   ├── cleaning-functions_beatriz.py
+│   ├── insights-functions_rachel.py
+│   └── model-functions_victoria.py
+│
+├── .gitattributes
+├── .gitignore
+├── .python-version
+├── config.yaml
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+└── uv.lock
 
 ## Project Overview
 
