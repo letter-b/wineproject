@@ -2,6 +2,7 @@
 
 ## Project Structure
 
+```
 ├── data/
 │   ├── clean/
 │   │   ├── red_ml_final_valuescore.csv
@@ -51,6 +52,7 @@
 ├── README.md
 ├── requirements.txt
 └── uv.lock
+```
 
 ## Project Overview
 
