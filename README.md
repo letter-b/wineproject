@@ -10,16 +10,16 @@
 │   └── raw/
 │       ├── red.csv                # Original Vivino red wine dataset
 │       ├── varieties.csv          # Reference list of grape varieties
-│       ├── red_ml_final.csv       # Cleaned dataset with engineered features
-│       └── red_ml_model_input.csv # Minimal dataset for modelling
+    └── clean/
+│       ├── red_ml_final.csv              # Cleaned dataset with engineered features
+        ├── red_ml_final_valuescore.csv   # Value score computed
+│       └── red_ml_model_input.csv        # Minimal dataset for modelling
 
 ├── notebooks/
 │   ├── data_cleaning_beatriz_update.ipynb   # Data wrangling & variety engineering
 │   ├── data_modelling_victoria.ipynb        # EDA, feature engineering & KNN model
 │   └── insights-storytelling_rachel.ipynb   # Feature importance, value analysis & storytelling
 ```
-
----
 
 ## Project Overview
 
@@ -28,6 +28,31 @@ Can an algorithm predict how good a wine tastes? That was the core question behi
 Using the [Vivino Red Wine dataset from Kaggle](https://www.kaggle.com/datasets/budnyak/wine-rating-and-price), we built a machine learning model to predict red wine ratings based on features like price, country, grape variety, and wine age. We limited our scope to red wines only to keep the business question focused: **what actually drives a high Vivino rating?**
 
 Beyond the model, we explored patterns in the data using Tableau — looking at how country, winery, and variety relate to perceived quality and value.
+
+---
+
+## Business Context
+
+This project explores what drives red wine ratings using data from Vivino, one of the world's largest wine platforms. Founded in Denmark in 2010, Vivino enables users to scan wine labels, rate wines, and access reviews from a global community. With over 60 million users and millions of ratings, it represents a large-scale, consumer-driven dataset. Unlike traditional wine evaluation systems, this analysis is based on real user behaviour rather than expert opinion.
+
+The objective is to understand how price, geography, and popularity influence wine ratings — and to identify where consumers can find the best value.
+
+### Historical Context
+
+Wine quality perception has been shaped over centuries, particularly by European producers. Countries like France played a central role in defining what "premium wine" means, with regions such as Bordeaux, Burgundy, and Champagne becoming global benchmarks — supported by concepts like terroir and controlled appellations. The 1855 Bordeaux Classification, commissioned under Napoleon III, formalised a hierarchy of prestige still referenced today.
+
+As a result, perceptions of wine quality are not purely objective. They are influenced by historical, cultural, and market-driven factors — and platforms like Vivino inherit that context.
+
+### The Feedback Loop
+
+With the rise of consumer rating platforms, the power to evaluate wine has shifted from institutions to the public. But this introduces its own dynamics:
+
+- Wine quality is subjective, but consumer behaviour is measurable
+- Ratings influence purchasing decisions
+- Ratings also shape how products are positioned in the market
+- Existing perceptions can influence ratings themselves
+
+This raises a key question: **are we measuring true quality, or reinforcing historical reputation?**
 
 ---
 
@@ -52,7 +77,6 @@ We used only `red.csv` to keep the scope clear and the model focused. `varieties
 | `red.csv` | Main dataset: name, winery, country, region, price, rating, year, number of ratings |
 | `varieties.csv` | Reference list of known grape variety names |
 
-
 ---
 
 ## Data Cleaning & Feature Engineering
@@ -75,10 +99,7 @@ This was one of the most challenging parts of the project. The dataset contained
   - `Unspecified Red` – wines with intentionally vague labels (e.g., "Rosso Toscana", "Red Wine")
   - `Unknown Variety` – no identifiable grape or region information (e.g., "Grande Cuvée", "Tradition")
 
----
-### Feature Importance (Random Forest)
-
-A Random Forest Regressor was trained to rank which features drive high ratings. The top predictors were dominated by **price** and **specific country/variety combinations**, confirming that origin and market positioning matter more than raw numerical features alone.
+The final regex pattern used for variety extraction — matching whole words only, with longer variety names prioritised first to avoid partial clashes.
 
 ---
 
@@ -92,6 +113,8 @@ A Pearson correlation and pairplot confirmed that:
 - **Year / wine age** contributes some predictive power
 - **NumberOfRatings** adds very little signal
 - Features show low inter-correlation — minimal multicollinearity risk
+
+---
 
 ## Modelling
 
@@ -120,26 +143,39 @@ Although we recognize that other models such as Random Forest could potentially 
 
 ---
 
-## Key Insights
+## Key Findings
 
-**Insight 1 – Price is the strongest predictor, but not the whole story.**  
-Price topped the feature importance chart, likely acting as a proxy for brand reputation and regional prestige rather than a direct driver of quality. Scatter plots confirm that at any given price point, ratings remain tightly clustered — high price does not guarantee a high rating.
+### Geographic Distribution
+The dataset is heavily concentrated in Europe, particularly France, Italy, and Spain. This introduces a structural bias that influences observed patterns throughout the analysis.
 
-**Insight 2 – Origin matters.**  
-Certain countries consistently produce higher-rated wines. Country was one of the more useful categorical features, adding meaningful signal to the model beyond what price alone provides.
+### Price vs Rating
+There is only a weak relationship between price and rating. While expensive wines tend to avoid low ratings, higher price does not guarantee significantly higher quality. Ratings remain tightly clustered across all price levels — most wines fall between 3 and 4 stars regardless of cost.
 
-**Insight 3 – Value exists outside premium regions.**  
-Some less traditional wine-producing countries (filtered to those with more than 20 wines) offer high ratings relative to price. The value score (rating ÷ price) highlights where consumers can find quality without paying a premium.
+### Popularity (Number of Ratings)
+The number of ratings was used as a proxy for popularity. Countries like the United States, Spain, and Italy show the highest engagement, which may reflect stronger platform usage, broader distribution, or higher accessibility. Notably, many of the most reviewed wines are not the most expensive — suggesting that accessibility and visibility drive popularity more than price alone.
+
+### Value Analysis
+A value score (rating ÷ price) was used to identify wines offering the best quality per euro. Countries such as Chile, Portugal, and Spain rank highest in value. Filtering out countries with small sample sizes ensures more reliable comparisons, and the results demonstrate that high-quality wines are not limited to traditional premium regions.
 
 ---
 
 ## Setbacks & Honest Reflections
 
-**KNN has limits for this problem.** KNN struggles with high-cardinality categorical features after one-hot encoding — adding all categorical variables (winery, region, variety, name) actually reduced R², suggesting they introduced more noise than signal. Tree-based models like Random Forest or Gradient Boosting would likely handle this better, and we explored feature importance with Random Forest for storytelling purposes.
+**KNN has limits for this problem.** KNN struggles with high-cardinality categorical features after one-hot encoding — adding all categorical variables (winery, region, variety, name) actually reduced R², suggesting they introduced more noise than signal. Tree-based models like Random Forest or Gradient Boosting would likely handle this better.
 
 **`variety_ml` was expensive to build.** Extracting grape variety from unstructured wine names required a combination of regex, region inference, and manual rule-curation. It was one of the most time-consuming parts of the project — and it still doesn't cover every case perfectly. That said, we're proud of how much structure we managed to extract from what was essentially free text.
 
 **Rating prediction is inherently hard.** Wine ratings are subjective, reviewer-influenced, and contextual. Even the best-structured model will have a ceiling on how much variance it can explain from price, region, and variety alone.
+
+---
+
+## Conclusion
+
+Wine ratings are influenced by multiple factors, and no single variable — including price — determines quality on its own. Ratings are tightly clustered, popularity is driven more by accessibility than price, and strong value can be found across diverse regions well beyond the traditional premium names.
+
+Perceptions of "premium wine" are shaped by centuries of historical and cultural context. Platforms like Vivino inherit that legacy — and with it, the risk of reinforcing rather than challenging it.
+
+**What we think of as premium wine is often shaped by history — not just by the data.**
 
 ---
 
@@ -153,13 +189,10 @@ Visual exploration was performed using Python and Tableau.
 - `numpy` – numerical operations and log transformations
 - `matplotlib` & `seaborn` – histograms, scatterplots, correlation heatmaps, bar charts
 - `scipy` – KS normality tests and Q-Q plots
-- `sklearn` – modelling, scaling, train/test split, KNN, Random Forest
+- `sklearn` – modelling, scaling, train/test split, KNN
 
 **Tableau** was used for interactive exploration of country, winery, and variety-level patterns, allowing drill-down by region and price tier.
 https://public.tableau.com/app/profile/rachel.vianna/viz/Vivino_Insights/Dashboard1
-
-**Prezi Presentation**
-https://prezi.com/p/cazr8sktltmc/?present=1
 
 ---
 
@@ -174,6 +207,13 @@ scipy
 scikit-learn
 pyyaml
 ```
+
+---
+
+## Presentation
+
+**Prezi Presentation**
+https://prezi.com/p/cazr8sktltmc/?present=1
 
 ---
 
